@@ -37,13 +37,11 @@ residential proxy.
 ## Reproducing the experiments
 
 ```bash
-python scripts/reproduce/reproduce.py <subcommand> --dry-run
+python scripts/reproduce/reproduce.py <subcommand> 
 ```
 
 Only the combinations that appear in the paper can be run; anything else is
-refused rather than quietly evaluated. Start with `--dry-run`, which prints the
-commands without running them — the full set is days of cloud time. See
-[`scripts/reproduce/README.md`](scripts/reproduce/README.md).
+refused rather than quietly evaluated. 
 
 ## Scripts
 
