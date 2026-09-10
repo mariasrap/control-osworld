@@ -36,13 +36,53 @@ real machine per sample.
 
 ## Prerequisites
 
-- **An AWS account**, with permission to create and terminate EC2 instances, and a
-  subnet and security group for them. Every sample boots its own instance.
-- **The OSWorld AMI** in that region, holding the Ubuntu desktop and its server.
-  `snapshot_name` selects it.
-- **OSWorld installed** so `desktop_env` imports. Install it with
-  `--no-build-isolation`, keep it out of `pyproject.toml`, and do not run
-  `uv sync` afterwards — any of those will break the install.
+- **Python 3.12 or newer.**
+- **An AWS account** with permission to create and terminate EC2 instances, plus a
+  subnet and security group for them. Every sample boots its own instance, so
+  there is no way to try this without one. Configured in Setup below.
+
+## Installation
+
+Order matters here, and getting it wrong is the most common way to end up with a
+broken environment. **Install OSWorld last, and never re-run the resolver
+afterwards.**
+
+From the repository, which pins every dependency through `uv.lock`:
+
+```bash
+git clone https://github.com/mariasrap/control-osworld.git
+cd control-osworld
+uv sync                       # creates .venv from the lockfile
+```
+
+Or as a package, into an environment you already have:
+
+```bash
+uv pip install control-osworld     # or: pip install control-osworld
+```
+
+Then add OSWorld itself, which supplies the desktop environment and the task
+checkers. It is deliberately **not** a declared dependency:
+
+```bash
+uv pip install --no-build-isolation \
+  "osworld @ git+https://github.com/xlang-ai/OSWorld.git@5fa8a8a6071bcccf17f9bfaab46c603574ff91b0"
+```
+
+Three things about that command:
+
+- **`--no-build-isolation` is required.** Without it the build fails.
+- **The commit is pinned** because OSWorld's `main` moves, and its task checkers
+  are what decide whether a run counts as a success.
+- **Do not run `uv sync` again afterwards.** OSWorld is absent from `pyproject.toml`
+  and the lockfile, so the resolver treats it as unwanted and removes it. Use
+  `uv pip install <pkg>` for anything you add later.
+
+Check it worked:
+
+```bash
+python -c "import desktop_env, control_osworld; print('ok')"
+```
 
 ## Setup
 
