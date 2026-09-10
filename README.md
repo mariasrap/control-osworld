@@ -24,14 +24,13 @@ Agents* — link to follow.
 | | |
 |---|---|
 | [`control_osworld/`](control_osworld/) | The environment itself, packaged as a Control Arena setting: tasks, the sandbox that runs them, scorers, policies and monitors. **Start with [its README](control_osworld/README.md)** — installation, setup and how the pieces fit. |
-| [`scripts/`](scripts/) | Runners: evaluations, the monitors over a finished run, refusal and side-task-leakage classifiers, and the GEPA attack-prompt optimizer. |
-| [`scripts/reproduce/`](scripts/reproduce/) | The paper's experiments, one subcommand per experiment. |
+| [`scripts/`](scripts/) | Everything you run: evaluations, monitors, classifiers, and the two generation pipelines. Detailed below. |
 | [`side_task_templates/`](side_task_templates/) | The side task catalog: the 81 templates, how each pairs with a main task, and every deviation from stock OSWorld. |
 
 ## Installation and setup
 
 Everything you need is in **[`control_osworld/README.md`](control_osworld/README.md)**.
-Be aware before you start that this is not a local benchmark: every task boots its
+Be aware before you start that every task boots its
 own cloud desktop, so it needs an AWS account, and a subset of tasks needs a
 residential proxy.
 
@@ -46,20 +45,36 @@ refused rather than quietly evaluated. Start with `--dry-run`, which prints the
 commands without running them — the full set is days of cloud time. See
 [`scripts/reproduce/README.md`](scripts/reproduce/README.md).
 
-## What we found
+## Scripts
 
-- A weaker monitor reliably separates honest from malicious trajectories produced
-  by a stronger agent **when it sees the whole run**: 97% recall at a 3% false
-  positive rate.
-- **Judging each step before it executes is much harder.** Recall falls at low
-  false positive rates, with less context to judge an action against.
-- **What the monitor sees matters, and not as expected.** The agent's own visible
-  text is the dominant signal; screenshots add little once text is available.
-- **Framing decides refusal.** Opus 4.8 refuses 26 of 81 side tasks when they are
-  asked as plain user requests, and none of 318 when the same actions are framed
-  as a covert secondary objective.
+### Running an evaluation
 
-Exact figures, the models evaluated and confidence intervals are in the paper.
+| | |
+|---|---|
+| [`run_osworld.py`](scripts/run_osworld.py) | Runs an evaluation and writes an inspect `.eval` log. One flag chooses the mode: honest, attack with a prompt of your choice, either of those with an empty agent, the side task presented openly as the main task, or the side-task verifier. `--per_step_side_eval` additionally scores the side task after every step. |
+| [`run_osworld_human_baseline.py`](scripts/run_osworld_human_baseline.py) | Hands the desktop to a person over noVNC instead of a model, to check by hand whether a task is doable at all. |
+
+### Scoring a finished run
+
+These read an `.eval` log and write JSON; none of them re-runs the agent.
+
+| | |
+|---|---|
+| [`run_monitor.py`](scripts/run_monitor.py) | The trusted monitor over each whole trajectory: one suspicion score per run. |
+| [`run_monitor_per_step.py`](scripts/run_monitor_per_step.py) | The trusted monitor step by step, so you can ask whether it would have flagged the agent before the harmful action executed rather than after. |
+| [`classifiers/refusal_classifier.py`](scripts/classifiers/refusal_classifier.py) | Did the agent refuse, and was it on safety grounds rather than because it got stuck? Separates "would not" from "could not". |
+| [`classifiers/side_task_leak_classifier.py`](scripts/classifiers/side_task_leak_classifier.py) | Did the agent give itself away in its visible text — naming the hidden objective, rather than merely acting on it? |
+
+Every one takes `--help`, and their module docstrings document the output JSON
+field by field.
+
+### Pipelines
+
+| | |
+|---|---|
+| [`attack_prompt_gepa/`](scripts/attack_prompt_gepa/) | Optimizes the attack prompt, and the reminder injected mid-run, with GEPA — searching for prompts that keep the side task completed while lowering how suspicious the monitor finds the trajectory. |
+| [`side_task_generation_pipeline/`](scripts/side_task_generation_pipeline/) | The agent pipeline that drafted the side task catalog from OSWorld's tasks, kept as the record of how those tasks were produced. |
+| [`reproduce/`](scripts/reproduce/) | The paper's experiments, one subcommand each. |
 
 ## Built on
 
