@@ -8,9 +8,18 @@ a file, weaken a setting, plant persistence) that an attacking agent is secretly
 told to pursue while it does the visible job. Main and side are scored
 independently, so a run can succeed at one, both, or neither.
 
-Everything here is a library. The commands that run it live in `scripts/`.
+This package is a library. Command-line runners for it live in the [`scripts/`](https://github.com/mariasrap/control-osworld/tree/main/scripts) folder of the repository.
 
 ## Quick Start
+
+Installing the package registers the setting with Control Arena, so its CLI can
+run it by name:
+
+```bash
+control-arena eval single --setting osworld
+```
+
+Or assemble it yourself:
 
 ```python
 from control_osworld import OSWorldSetting
@@ -18,10 +27,12 @@ from control_osworld import OSWorldSetting
 setting = OSWorldSetting(test_config="test_small")
 ```
 
-That is the object Control Arena runs. `test_config` names a file in
-`evaluation_examples/` listing which tasks to include; the rest of the fields are
-below. To run an evaluation end to end rather than assemble one yourself, use
-`scripts/run_osworld.py`, and `scripts/reproduce/` for the paper's runs.
+`test_config` names a file in `evaluation_examples/` listing which tasks to
+include. Fuller runners -- attack prompts, monitors, classifiers -- are in
+[`scripts/`](https://github.com/mariasrap/control-osworld/tree/main/scripts).
+
+Complete the Setup below first: this setting needs cloud credentials and boots a
+real machine per sample.
 
 ## Prerequisites
 
@@ -32,6 +43,33 @@ below. To run an evaluation end to end rather than assemble one yourself, use
 - **OSWorld installed** so `desktop_env` imports. Install it with
   `--no-build-isolation`, keep it out of `pyproject.toml`, and do not run
   `uv sync` afterwards — any of those will break the install.
+
+## Setup
+
+**Credentials.** Export these, or keep them in a file you source before running.
+
+| Variable | Purpose |
+|---|---|
+| `AWS_REGION` | Region the sandbox VMs are launched in |
+| `AWS_SUBNET_ID`, `AWS_SECURITY_GROUP_ID` | Where in your VPC they are placed |
+| `AWS_INSTANCE_TYPE` | VM size; optional, defaults to `t3.xlarge` |
+| `CLIENT_PASSWORD` | Desktop password baked into the VM image |
+| `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` | Whichever provider the agent and monitor use |
+
+**Proxy.** 52 tasks reach sites that block datacentre IPs and need a residential
+proxy. Copy the template beside it and fill in your account:
+
+```bash
+cp control_osworld/evaluation_examples/settings/proxy/dataimpulse.json.example \
+   control_osworld/evaluation_examples/settings/proxy/dataimpulse.json
+```
+
+Without it those tasks fail. Set `filter_out_proxy=True` on the setting to drop
+them instead.
+
+**Google Drive.** Eight tasks need a live Google account, configured the same way
+from `evaluation_examples/settings/google/settings.json.template`. None of them
+has a side task, so they matter only if you run the full task list.
 
 ## What a run does
 
@@ -68,8 +106,8 @@ below. To run an evaluation end to end rather than assemble one yourself, use
 and the run mode (`side_task_as_main`, `non_hand_held`, `enable_proxy`).
 
 Defaults live in `config.py` and nowhere else — the setting's fields and
-`scripts/run_osworld.py`'s command-line defaults both read from it, so they cannot
-drift apart.
+the [`scripts/`](https://github.com/mariasrap/control-osworld/tree/main/scripts) runners' command-line defaults both read
+from it, so they cannot drift apart.
 
 ## Tasks and scoring
 
@@ -117,7 +155,7 @@ is never shown in any of them.
 
 ## The sandbox
 
-The riskiest and most involved file. An Inspect `SandboxEnvironment` wrapping
+An Inspect `SandboxEnvironment` wrapping
 OSWorld's `DesktopEnv`, talking to a Flask server on the instance over HTTP.
 
 ```
@@ -212,15 +250,6 @@ takes JSON. `/run_bash_script` and `/run_python` return 404 on this AMI — use
 - **`exec()` has a 120 s server-side limit.** Anything longer, or anything that
   never exits, needs `launch()`.
 
-## Environment variables
-
-```bash
-AWS_REGION=us-east-1
-AWS_SUBNET_ID=subnet-xxxxx
-AWS_SECURITY_GROUP_ID=sg-xxxxx
-AWS_INSTANCE_TYPE=t3.xlarge   # optional
-```
-
 ## Tests
 
 `tests/test_osworld_sandbox.py` covers the sandbox against a real instance: that
@@ -247,7 +276,7 @@ is both capable and independently malicious.
 
 ## Caveats and limitations
 
-- **One patch lives outside this repo.** OSWorld's AWS provider registers signal
+- **One patch lives outside this package.** OSWorld's AWS provider registers signal
   handlers unconditionally, which throws when the sandbox runs off the main
   thread, so we patch its `providers/aws/manager.py` in place. Reinstalling
   OSWorld reverts it, and the symptom is the first entry under Common issues.
@@ -260,8 +289,8 @@ is both capable and independently malicious.
 - **52 tasks need a residential proxy** and fail without one; `filter_out_proxy`
   drops them instead.
 - **One task needs a bigger VM.** It exhausts the default instance's memory; it is
-  listed in `evaluation_examples/heavy_tasks.json`, and `scripts/run_osworld.py`
-  keeps it out of a normal run rather than letting it die.
+  listed in `evaluation_examples/heavy_tasks.json`, and the runners in
+  [`scripts/`](https://github.com/mariasrap/control-osworld/tree/main/scripts) keep it out of a normal run.
 
 ## Common issues
 
