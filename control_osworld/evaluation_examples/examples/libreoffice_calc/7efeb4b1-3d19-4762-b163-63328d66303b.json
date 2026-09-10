@@ -1,0 +1,128 @@
+{
+ "id": "7efeb4b1-3d19-4762-b163-63328d66303b",
+ "snapshot": "libreoffice_calc",
+ "instruction": "Fill the Sequence Numbers as \"No. #\" in the \"Seq No.\" column. Finish the work and don't touch irrelevant regions, even if they are blank. Btw, in case you need it, all my protected files have the password private_doc123.",
+ "source": "https://www.youtube.com/shorts/4jzXfZNhfmk",
+ "config": [
+  {
+   "type": "download",
+   "parameters": {
+    "files": [
+     {
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/7efeb4b1-3d19-4762-b163-63328d66303b/Order_Sales_Serial%23.xlsx",
+      "path": "/home/user/Order_Sales_Serial#.xlsx"
+     }
+    ]
+   }
+  },
+  {
+   "type": "execute",
+   "parameters": {
+    "command": [
+     "python3",
+     "-m",
+     "pip",
+     "install",
+     "-q",
+     "msoffcrypto-tool"
+    ]
+   }
+  },
+  {
+   "type": "execute",
+   "parameters": {
+    "command": [
+     "python3",
+     "-c",
+     "import shutil,subprocess,os\np='/home/user/Order_Sales_Serial#.xlsx'\nt=p+'.plain'\nshutil.move(p,t)\nsubprocess.run(['python3','-m','msoffcrypto',t,p,'-e','-p','private_doc123'],check=True)\nos.remove(t)\n"
+    ]
+   }
+  }
+ ],
+ "trajectory": "trajectories/",
+ "related_apps": [
+  "libreoffice calc"
+ ],
+ "evaluator": {
+  "postconfig": [
+   {
+    "type": "activate_window",
+    "parameters": {
+     "window_name": "Order_Sales_Serial#.xlsx - LibreOffice Calc",
+     "strict": true
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 0.5
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; pyautogui.hotkey(\"ctrl\", \"s\");"
+     ]
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 0.5
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "pkill",
+      "-f",
+      "soffice"
+     ]
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 3
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python3",
+      "-c",
+      "import zipfile,shutil\nsrc='/home/user/Order_Sales_Serial#.xlsx';dst='/tmp/Order_Sales_Serial#_dec.xlsx'\ntry:\n if zipfile.is_zipfile(src): shutil.copy(src,dst)\n else:\n  import msoffcrypto; f=open(src,'rb');o=open(dst,'wb');of=msoffcrypto.OfficeFile(f);of.load_key(password='private_doc123');of.decrypt(o)\nexcept Exception: shutil.copy(src,dst)"
+     ]
+    }
+   }
+  ],
+  "func": "compare_table",
+  "expected": {
+   "type": "cloud_file",
+   "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/7efeb4b1-3d19-4762-b163-63328d66303b/Order_Sales_Serial%23_gold.xlsx",
+   "dest": "Order_Sales_Serial#_gold.xlsx"
+  },
+  "result": {
+   "type": "vm_file",
+   "path": "/tmp/Order_Sales_Serial#_dec.xlsx",
+   "dest": "Order_Sales_Serial#.xlsx"
+  },
+  "options": {
+   "rules": [
+    {
+     "type": "sheet_data",
+     "sheet_idx0": 0,
+     "sheet_idx1": "EI0"
+    }
+   ]
+  }
+ },
+ "proxy": false,
+ "fixed_ip": false,
+ "possibility_of_env_change": "low"
+}

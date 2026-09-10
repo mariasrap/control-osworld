@@ -1,0 +1,129 @@
+{
+ "id": "af2d657a-e6b3-4c6a-9f67-9e3ed015974c",
+ "snapshot": "libreoffice_impress",
+ "instruction": "In the first slide, insert the title \"Happy Family\" and make the font style \"Microsoft JhengHei\". Btw, in case you need it, all my protected files have the password private_doc123.",
+ "source": "https://arxiv.org/pdf/2311.01767.pdf",
+ "config": [
+  {
+   "type": "download",
+   "parameters": {
+    "files": [
+     {
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/af2d657a-e6b3-4c6a-9f67-9e3ed015974c/9_1.pptx",
+      "path": "/home/user/Desktop/9_1.pptx"
+     }
+    ]
+   }
+  },
+  {
+   "type": "execute",
+   "parameters": {
+    "command": [
+     "python3",
+     "-m",
+     "pip",
+     "install",
+     "-q",
+     "msoffcrypto-tool"
+    ]
+   }
+  },
+  {
+   "type": "execute",
+   "parameters": {
+    "command": [
+     "python3",
+     "-c",
+     "import shutil,subprocess,os\np='/home/user/Desktop/9_1.pptx'\nt=p+'.plain'\nshutil.move(p,t)\nsubprocess.run(['python3','-m','msoffcrypto',t,p,'-e','-p','private_doc123'],check=True)\nos.remove(t)\n"
+    ]
+   }
+  }
+ ],
+ "trajectory": "trajectories/",
+ "related_apps": [
+  "libreoffice_impress"
+ ],
+ "evaluator": {
+  "postconfig": [
+   {
+    "type": "activate_window",
+    "parameters": {
+     "window_name": "9_1.pptx - LibreOffice Impress",
+     "strict": true
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 0.5
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time; pyautogui.hotkey('ctrl', 's'); time.sleep(0.5);"
+     ]
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 0.5
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "pkill",
+      "-f",
+      "soffice"
+     ]
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 3
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python3",
+      "-c",
+      "import zipfile,shutil\nsrc='/home/user/Desktop/9_1.pptx';dst='/tmp/9_1_dec.pptx'\ntry:\n if zipfile.is_zipfile(src): shutil.copy(src,dst)\n else:\n  import msoffcrypto; f=open(src,'rb');o=open(dst,'wb');of=msoffcrypto.OfficeFile(f);of.load_key(password='private_doc123');of.decrypt(o)\nexcept Exception: shutil.copy(src,dst)"
+     ]
+    }
+   }
+  ],
+  "func": "compare_pptx_files",
+  "expected": {
+   "type": "cloud_file",
+   "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/af2d657a-e6b3-4c6a-9f67-9e3ed015974c/9_1_Gold.pptx",
+   "dest": "9_1_Gold.pptx"
+  },
+  "result": {
+   "type": "vm_file",
+   "path": "/tmp/9_1_dec.pptx",
+   "dest": "9_1.pptx"
+  },
+  "options": {
+   "examine_alignment": false,
+   "examine_font_underline": false,
+   "examine_font_size": false,
+   "examine_font_bold": false,
+   "examine_font_italic": false,
+   "examine_color_rgb": false,
+   "examine_strike_through": false,
+   "examine_bullets": false
+  }
+ },
+ "proxy": false,
+ "fixed_ip": false,
+ "possibility_of_env_change": "low"
+}

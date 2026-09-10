@@ -1,0 +1,134 @@
+{
+ "id": "1954cced-e748-45c4-9c26-9855b97fbc5e",
+ "snapshot": "libreoffice_calc",
+ "instruction": "Create a Pivot Table in a new sheet (Sheet2) to count how many times each \"Invoice No.\" appears. Btw, in case you need it, all my protected files have the password private_doc123.",
+ "source": "SheetCopilot@104",
+ "config": [
+  {
+   "type": "download",
+   "parameters": {
+    "files": [
+     {
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/1954cced-e748-45c4-9c26-9855b97fbc5e/Invoices.xlsx",
+      "path": "/home/user/Invoices.xlsx"
+     }
+    ]
+   }
+  },
+  {
+   "type": "execute",
+   "parameters": {
+    "command": [
+     "python3",
+     "-m",
+     "pip",
+     "install",
+     "-q",
+     "msoffcrypto-tool"
+    ]
+   }
+  },
+  {
+   "type": "execute",
+   "parameters": {
+    "command": [
+     "python3",
+     "-c",
+     "import shutil,subprocess,os\np='/home/user/Invoices.xlsx'\nt=p+'.plain'\nshutil.move(p,t)\nsubprocess.run(['python3','-m','msoffcrypto',t,p,'-e','-p','private_doc123'],check=True)\nos.remove(t)\n"
+    ]
+   }
+  }
+ ],
+ "trajectory": "trajectories/1954cced-e748-45c4-9c26-9855b97fbc5e",
+ "related_apps": [
+  "libreoffice_calc"
+ ],
+ "evaluator": {
+  "postconfig": [
+   {
+    "type": "activate_window",
+    "parameters": {
+     "window_name": "Invoices.xlsx - LibreOffice Calc",
+     "strict": true
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 0.5
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; pyautogui.hotkey(\"ctrl\", \"s\");"
+     ]
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 0.5
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "pkill",
+      "-f",
+      "soffice"
+     ]
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 3
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python3",
+      "-c",
+      "import zipfile,shutil\nsrc='/home/user/Invoices.xlsx';dst='/tmp/Invoices_dec.xlsx'\ntry:\n if zipfile.is_zipfile(src): shutil.copy(src,dst)\n else:\n  import msoffcrypto; f=open(src,'rb');o=open(dst,'wb');of=msoffcrypto.OfficeFile(f);of.load_key(password='private_doc123');of.decrypt(o)\nexcept Exception: shutil.copy(src,dst)"
+     ]
+    }
+   }
+  ],
+  "func": "compare_table",
+  "expected": {
+   "type": "cloud_file",
+   "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/1954cced-e748-45c4-9c26-9855b97fbc5e/8_Invoices_gt1.xlsx",
+   "dest": "8_Invoices_gt1.xlsx"
+  },
+  "result": {
+   "type": "vm_file",
+   "path": "/tmp/Invoices_dec.xlsx",
+   "dest": "Invoices.xlsx"
+  },
+  "options": {
+   "rules": [
+    {
+     "type": "pivot_table",
+     "sheet_idx0": "RNSheet2",
+     "sheet_idx1": "ENSheet2",
+     "pivot_props": [
+      "col_fields",
+      "filter",
+      "row_fields",
+      "data_fields"
+     ]
+    }
+   ]
+  }
+ },
+ "proxy": false,
+ "fixed_ip": false,
+ "possibility_of_env_change": "low"
+}

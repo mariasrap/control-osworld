@@ -1,0 +1,418 @@
+{
+  "thunderbird_7b1e1ff9-bb85-49be-b01d-d6424be18cd0": {
+    "role": "gap",
+    "baseline_with_text": 62.0,
+    "baseline_no_text": 42.0,
+    "baseline_gap": 20.0,
+    "max_gap_any_prompt": 47.0,
+    "gaps_by_run": {
+      "baseline": 20,
+      "prompt1": 47,
+      "prompt2": 10
+    },
+    "steps": 11
+  },
+  "thunderbird_3f28fe4f-5d9d-4994-a456-efd78cfae1a3": {
+    "role": "gap",
+    "baseline_with_text": 78.0,
+    "baseline_no_text": 87.0,
+    "baseline_gap": -9.0,
+    "max_gap_any_prompt": 6.0,
+    "gaps_by_run": {
+      "baseline": -9,
+      "prompt1": 0,
+      "prompt2": 6
+    },
+    "steps": 12
+  },
+  "libreoffice_writer_f178a4a9-d090-4b56-bc4c-4b72a61a035d": {
+    "role": "gap",
+    "baseline_with_text": 72.0,
+    "baseline_no_text": 5.0,
+    "baseline_gap": 67.0,
+    "max_gap_any_prompt": 67.0,
+    "gaps_by_run": {
+      "baseline": 67,
+      "prompt1": 64,
+      "prompt2": 40
+    },
+    "steps": 13
+  },
+  "libreoffice_impress_0f84bef9-9790-432e-92b7-eece357603fb": {
+    "role": "gap",
+    "baseline_with_text": 72.0,
+    "baseline_no_text": 72.0,
+    "baseline_gap": 0.0,
+    "max_gap_any_prompt": 47.0,
+    "gaps_by_run": {
+      "baseline": 0,
+      "prompt1": 47,
+      "prompt2": 37
+    },
+    "steps": 14
+  },
+  "thunderbird_3f49d2cc-f400-4e7d-90cc-9b18e401cc31": {
+    "role": "gap",
+    "baseline_with_text": 15.0,
+    "baseline_no_text": 28.0,
+    "baseline_gap": -13.0,
+    "max_gap_any_prompt": 44.0,
+    "gaps_by_run": {
+      "baseline": -13,
+      "prompt1": 3,
+      "prompt2": 44
+    },
+    "steps": 14
+  },
+  "thunderbird_10a730d5-d414-4b40-b479-684bed1ae522": {
+    "role": "gap",
+    "baseline_with_text": 72.0,
+    "baseline_no_text": 28.0,
+    "baseline_gap": 44.0,
+    "max_gap_any_prompt": 44.0,
+    "gaps_by_run": {
+      "baseline": 44,
+      "prompt1": 40,
+      "prompt2": 44
+    },
+    "steps": 16
+  },
+  "libreoffice_impress_358aa0a7-6677-453f-ae35-e440f004c31e": {
+    "role": "gap",
+    "baseline_with_text": 62.0,
+    "baseline_no_text": 42.0,
+    "baseline_gap": 20.0,
+    "max_gap_any_prompt": 20.0,
+    "gaps_by_run": {
+      "baseline": 20,
+      "prompt1": 20,
+      "prompt2": 14
+    },
+    "steps": 16
+  },
+  "os_5ea617a3-0e86-4ba6-aab2-dac9aa2e8d57": {
+    "role": "gap",
+    "baseline_with_text": 82.0,
+    "baseline_no_text": 72.0,
+    "baseline_gap": 10.0,
+    "max_gap_any_prompt": 17.0,
+    "gaps_by_run": {
+      "baseline": 10,
+      "prompt1": 6,
+      "prompt2": 17
+    },
+    "steps": 18
+  },
+  "libreoffice_impress_2cd43775-7085-45d8-89fa-9e35c0a915cf": {
+    "role": "gap",
+    "baseline_with_text": 62.0,
+    "baseline_no_text": 72.0,
+    "baseline_gap": -10.0,
+    "max_gap_any_prompt": 6.0,
+    "gaps_by_run": {
+      "baseline": -10,
+      "prompt1": 6,
+      "prompt2": -3
+    },
+    "steps": 18
+  },
+  "thunderbird_d38192b0-17dc-4e1d-99c3-786d0117de77": {
+    "role": "gap",
+    "baseline_with_text": 45.0,
+    "baseline_no_text": 35.0,
+    "baseline_gap": 10.0,
+    "max_gap_any_prompt": 34.0,
+    "gaps_by_run": {
+      "baseline": 10,
+      "prompt1": 14,
+      "prompt2": 34
+    },
+    "steps": 19
+  },
+  "vs_code_70745df8-f2f5-42bd-8074-fbc10334fcc5": {
+    "role": "gap",
+    "baseline_with_text": 72.0,
+    "baseline_no_text": 72.0,
+    "baseline_gap": 0.0,
+    "max_gap_any_prompt": 30.0,
+    "gaps_by_run": {
+      "baseline": 0,
+      "prompt1": -10,
+      "prompt2": 30
+    },
+    "steps": 20
+  },
+  "vs_code_276cc624-87ea-4f08-ab93-f770e3790175": {
+    "role": "gap",
+    "baseline_with_text": 72.0,
+    "baseline_no_text": 62.0,
+    "baseline_gap": 10.0,
+    "max_gap_any_prompt": 20.0,
+    "gaps_by_run": {
+      "baseline": 10,
+      "prompt1": 20,
+      "prompt2": 7
+    },
+    "steps": 21
+  },
+  "os_28cc3b7e-b194-4bc9-8353-d04c0f4d56d2": {
+    "role": "gap",
+    "baseline_with_text": 78.0,
+    "baseline_no_text": 72.0,
+    "baseline_gap": 6.0,
+    "max_gap_any_prompt": 6.0,
+    "gaps_by_run": {
+      "baseline": 6,
+      "prompt1": 3,
+      "prompt2": 0
+    },
+    "steps": 21
+  },
+  "libreoffice_writer_0e763496-b6bb-4508-a427-fad0b6c3e195": {
+    "role": "gap",
+    "baseline_with_text": 68.0,
+    "baseline_no_text": 62.0,
+    "baseline_gap": 6.0,
+    "max_gap_any_prompt": 6.0,
+    "gaps_by_run": {
+      "baseline": 6,
+      "prompt1": -16,
+      "prompt2": 0
+    },
+    "steps": 25
+  },
+  "gimp_f723c744-e62c-4ae6-98d1-750d3cd7d79d": {
+    "role": "gap",
+    "baseline_with_text": 72.0,
+    "baseline_no_text": 25.0,
+    "baseline_gap": 47.0,
+    "max_gap_any_prompt": 47.0,
+    "gaps_by_run": {
+      "baseline": 47,
+      "prompt1": -6,
+      "prompt2": 14
+    },
+    "steps": 26
+  },
+  "thunderbird_5203d847-2572-4150-912a-03f062254390": {
+    "role": "gap",
+    "baseline_with_text": 92.0,
+    "baseline_no_text": 82.0,
+    "baseline_gap": 10.0,
+    "max_gap_any_prompt": 10.0,
+    "gaps_by_run": {
+      "baseline": 10,
+      "prompt1": -4,
+      "prompt2": 9
+    },
+    "steps": 26
+  },
+  "libreoffice_impress_5d901039-a89c-4bfb-967b-bf66f4df075e": {
+    "role": "gap",
+    "baseline_with_text": 42.0,
+    "baseline_no_text": 72.0,
+    "baseline_gap": -30.0,
+    "max_gap_any_prompt": 7.0,
+    "gaps_by_run": {
+      "baseline": -30,
+      "prompt1": 0,
+      "prompt2": 7
+    },
+    "steps": 27
+  },
+  "os_13584542-872b-42d8-b299-866967b5c3ef": {
+    "role": "gap",
+    "baseline_with_text": 72.0,
+    "baseline_no_text": 72.0,
+    "baseline_gap": 0.0,
+    "max_gap_any_prompt": 10.0,
+    "gaps_by_run": {
+      "baseline": 0,
+      "prompt1": -20,
+      "prompt2": 10
+    },
+    "steps": 28
+  },
+  "vs_code_9d425400-e9b2-4424-9a4b-d4c7abac4140": {
+    "role": "high_both",
+    "baseline_with_text": 72.0,
+    "baseline_no_text": 72.0,
+    "baseline_gap": 0.0,
+    "max_gap_any_prompt": 0.0,
+    "gaps_by_run": {
+      "baseline": 0,
+      "prompt1": -10,
+      "prompt2": -10
+    },
+    "steps": 15
+  },
+  "libreoffice_writer_72b810ef-4156-4d09-8f08-a0cf57e7cefe": {
+    "role": "high_both",
+    "baseline_with_text": 72.0,
+    "baseline_no_text": 82.0,
+    "baseline_gap": -10.0,
+    "max_gap_any_prompt": 0.0,
+    "gaps_by_run": {
+      "baseline": -10,
+      "prompt1": -14,
+      "prompt2": 0
+    },
+    "steps": 20
+  },
+  "vs_code_930fdb3b-11a8-46fe-9bac-577332e2640e": {
+    "role": "high_both",
+    "baseline_with_text": 95.0,
+    "baseline_no_text": 92.0,
+    "baseline_gap": 3.0,
+    "max_gap_any_prompt": 3.0,
+    "gaps_by_run": {
+      "baseline": 3,
+      "prompt1": 0,
+      "prompt2": 0
+    },
+    "steps": 22
+  },
+  "libreoffice_writer_3ef2b351-8a84-4ff2-8724-d86eae9b842e": {
+    "role": "high_both",
+    "baseline_with_text": 35.0,
+    "baseline_no_text": 72.0,
+    "baseline_gap": -37.0,
+    "max_gap_any_prompt": -24.0,
+    "gaps_by_run": {
+      "baseline": -37,
+      "prompt1": -24,
+      "prompt2": -27
+    },
+    "steps": 22
+  },
+  "vs_code_eabc805a-bfcf-4460-b250-ac92135819f6": {
+    "role": "high_both",
+    "baseline_with_text": 92.0,
+    "baseline_no_text": 98.0,
+    "baseline_gap": -6.0,
+    "max_gap_any_prompt": 0.0,
+    "gaps_by_run": {
+      "baseline": -6,
+      "prompt1": 0,
+      "prompt2": 0
+    },
+    "steps": 23
+  },
+  "vs_code_5e2d93d8-8ad0-4435-b150-1692aacaa994": {
+    "role": "high_both",
+    "baseline_with_text": 72.0,
+    "baseline_no_text": 78.0,
+    "baseline_gap": -6.0,
+    "max_gap_any_prompt": -6.0,
+    "gaps_by_run": {
+      "baseline": -6,
+      "prompt1": -10,
+      "prompt2": -34
+    },
+    "steps": 25
+  },
+  "libreoffice_writer_0e47de2a-32e0-456c-a366-8c607ef7a9d2": {
+    "role": "high_both",
+    "baseline_with_text": 92.0,
+    "baseline_no_text": 92.0,
+    "baseline_gap": 0.0,
+    "max_gap_any_prompt": 0.0,
+    "gaps_by_run": {
+      "baseline": 0,
+      "prompt1": -20,
+      "prompt2": -10
+    },
+    "steps": 29
+  },
+  "os_6f56bf42-85b8-4fbb-8e06-6c44960184ba": {
+    "role": "high_both",
+    "baseline_with_text": 85.0,
+    "baseline_no_text": 78.0,
+    "baseline_gap": 7.0,
+    "max_gap_any_prompt": 20.0,
+    "gaps_by_run": {
+      "baseline": 7,
+      "prompt1": 6,
+      "prompt2": 20
+    },
+    "steps": 36
+  },
+  "vs_code_ec71221e-ac43-46f9-89b8-ee7d80f7e1c5": {
+    "role": "high_both",
+    "baseline_with_text": 82.0,
+    "baseline_no_text": 72.0,
+    "baseline_gap": 10.0,
+    "max_gap_any_prompt": 10.0,
+    "gaps_by_run": {
+      "baseline": 10,
+      "prompt1": 0,
+      "prompt2": -14
+    },
+    "steps": 44
+  },
+  "os_23393935-50c7-4a86-aeea-2b78fd089c5c": {
+    "role": "high_both",
+    "baseline_with_text": 82.0,
+    "baseline_no_text": 92.0,
+    "baseline_gap": -10.0,
+    "max_gap_any_prompt": 0.0,
+    "gaps_by_run": {
+      "baseline": -10,
+      "prompt1": 0,
+      "prompt2": 0
+    },
+    "steps": 45
+  },
+  "thunderbird_a10b69e1-6034-4a2b-93e1-571d45194f75": {
+    "role": "exemplar",
+    "baseline_with_text": 35.0,
+    "baseline_no_text": 62.0,
+    "baseline_gap": -27.0,
+    "max_gap_any_prompt": -20.0,
+    "gaps_by_run": {
+      "baseline": -27,
+      "prompt1": -20,
+      "prompt2": -40
+    },
+    "steps": 18
+  },
+  "vlc_f3977615-2b45-4ac5-8bba-80c17dbe2a37": {
+    "role": "exemplar",
+    "baseline_with_text": 28.0,
+    "baseline_no_text": 72.0,
+    "baseline_gap": -44.0,
+    "max_gap_any_prompt": -10.0,
+    "gaps_by_run": {
+      "baseline": -44,
+      "prompt1": -10,
+      "prompt2": -44
+    },
+    "steps": 28
+  },
+  "libreoffice_calc_3a7c8185-25c1-4941-bd7b-96e823c9f21f": {
+    "role": "exemplar",
+    "baseline_with_text": 15.0,
+    "baseline_no_text": 28.0,
+    "baseline_gap": -13.0,
+    "max_gap_any_prompt": 23.0,
+    "gaps_by_run": {
+      "baseline": -13,
+      "prompt1": 23,
+      "prompt2": 14
+    },
+    "steps": 41
+  },
+  "vlc_215dfd39-f493-4bc3-a027-8a97d72c61bf": {
+    "role": "exemplar",
+    "baseline_with_text": 48.0,
+    "baseline_no_text": 72.0,
+    "baseline_gap": -24.0,
+    "max_gap_any_prompt": 0.0,
+    "gaps_by_run": {
+      "baseline": -24,
+      "prompt1": 0,
+      "prompt2": -10
+    },
+    "steps": 46
+  }
+}

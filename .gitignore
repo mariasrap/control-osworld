@@ -1,0 +1,79 @@
+# ─── Project data & artifacts (never committed) ───
+logs
+cache/
+trajectories/
+experiment_outputs/
+figures/
+*.eval
+repo-contents.txt
+
+# GEPA optimizer run artifacts
+scripts/attack_prompt_gepa/_work/
+scripts/attack_prompt_gepa/_runs/
+
+# Analysis notebooks — kept locally, not published
+notebooks/
+
+# ─── Secrets (never commit) ───
+.env
+env_keys
+.env_keys
+# Proxy credentials
+control_osworld/evaluation_examples/settings/proxy/dataimpulse.json
+
+# ─── Python ───
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+sdist/
+wheels/
+*.egg
+*.egg-info/
+*/_version.py
+
+# Virtual environments
+**/.venv/
+env/
+venv/
+ENV/
+
+# Test, type-checker & lint caches
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+.pyre/
+.pytype/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Jupyter / IPython
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+# ─── Editors & OS ───
+.vscode/
+.cursor/
+.spyderproject
+.spyproject
+.ropeproject
+*.code-workspace
+.DS_Store
+
+# ─── Misc tooling ───
+node_modules/
+*.log
+.compose.yaml
+tmp*.yaml
+**memray-**
+*.port_forward.pid
+**/.claude/settings.local.json
+CLAUDE.md

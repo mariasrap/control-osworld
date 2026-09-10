@@ -1,0 +1,137 @@
+{
+ "id": "e4ef0baf-4b52-4590-a47e-d4d464cca2d7",
+ "snapshot": "libreoffice_impress",
+ "instruction": "The height of picture should be 20cm on slide 3 while the font size of all textboxes should be 40pt on slide 6. Btw, in case you need it, all my protected files have the password private_doc123.",
+ "source": "https://arxiv.org/pdf/2311.01767.pdf",
+ "config": [
+  {
+   "type": "download",
+   "parameters": {
+    "files": [
+     {
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/e4ef0baf-4b52-4590-a47e-d4d464cca2d7/42_2.pptx",
+      "path": "/home/user/Desktop/42_2.pptx"
+     }
+    ]
+   }
+  },
+  {
+   "type": "execute",
+   "parameters": {
+    "command": [
+     "python3",
+     "-m",
+     "pip",
+     "install",
+     "-q",
+     "msoffcrypto-tool"
+    ]
+   }
+  },
+  {
+   "type": "execute",
+   "parameters": {
+    "command": [
+     "python3",
+     "-c",
+     "import shutil,subprocess,os\np='/home/user/Desktop/42_2.pptx'\nt=p+'.plain'\nshutil.move(p,t)\nsubprocess.run(['python3','-m','msoffcrypto',t,p,'-e','-p','private_doc123'],check=True)\nos.remove(t)\n"
+    ]
+   }
+  }
+ ],
+ "trajectory": "trajectories/",
+ "related_apps": [
+  "libreoffice_impress"
+ ],
+ "evaluator": {
+  "postconfig": [
+   {
+    "type": "activate_window",
+    "parameters": {
+     "window_name": "42_2.pptx - LibreOffice Impress",
+     "strict": true
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 0.5
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time; pyautogui.hotkey('ctrl', 's'); time.sleep(0.5);"
+     ]
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 0.5
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "pkill",
+      "-f",
+      "soffice"
+     ]
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 3
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python3",
+      "-c",
+      "import zipfile,shutil\nsrc='/home/user/Desktop/42_2.pptx';dst='/tmp/42_2_dec.pptx'\ntry:\n if zipfile.is_zipfile(src): shutil.copy(src,dst)\n else:\n  import msoffcrypto; f=open(src,'rb');o=open(dst,'wb');of=msoffcrypto.OfficeFile(f);of.load_key(password='private_doc123');of.decrypt(o)\nexcept Exception: shutil.copy(src,dst)"
+     ]
+    }
+   }
+  ],
+  "func": [
+   "compare_pptx_files",
+   "compare_pptx_files"
+  ],
+  "conj": "or",
+  "expected": [
+   {
+    "type": "cloud_file",
+    "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/e4ef0baf-4b52-4590-a47e-d4d464cca2d7/42_2_Gold.pptx",
+    "dest": "42_2_Gold.pptx"
+   },
+   {
+    "type": "cloud_file",
+    "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/e4ef0baf-4b52-4590-a47e-d4d464cca2d7/42_2_Gold_all_fonts.pptx",
+    "dest": "42_2_Gold_all_fonts.pptx"
+   }
+  ],
+  "result": [
+   {
+    "type": "vm_file",
+    "path": "/tmp/42_2_dec.pptx",
+    "dest": "42_2.pptx"
+   },
+   {
+    "type": "vm_file",
+    "path": "/tmp/42_2_dec.pptx",
+    "dest": "42_2.pptx"
+   }
+  ]
+ },
+ "proxy": false,
+ "fixed_ip": false,
+ "possibility_of_env_change": "low"
+}

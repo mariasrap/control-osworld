@@ -1,0 +1,61 @@
+[project]
+    name = "control-osworld"
+    version = "0.1.0"
+    description = "OSWorld setting for Control Arena"
+    requires-python = ">=3.12"
+    license = { text = "MIT" }
+
+    dependencies = [
+        "control-arena @ git+https://github.com/UKGovernmentBEIS/control-arena.git@67c54315c440bb50926be8a60c9a80e08f6416c2",
+        "boto3>=1.34.131,<2.0.0",
+        "packaging>=24.0",
+        "python-dotenv>=1.0.0",
+        "selenium>=4.20.0",
+    ]
+
+    [project.entry-points.control_arena]
+        settings = "control_osworld.entrypoint"
+
+[dependency-groups]
+    dev = [
+        "ipdb>=0.13.13",
+        "pytest-asyncio>=0.24.0",
+        "pytest==8.3.3",
+        "ruff>=0.6.8",
+    ]
+
+[tool.uv.sources]
+    control-arena = { git = "https://github.com/UKGovernmentBEIS/control-arena.git", rev = "67c54315c440bb50926be8a60c9a80e08f6416c2" }
+
+[build-system]
+    build-backend = "hatchling.build"
+    requires = ["hatchling"]
+
+[tool.hatch.metadata]
+    allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+    packages = ["control_osworld"]
+
+[tool.pytest.ini_options]
+    addopts = ["--import-mode=importlib", "--strict-markers"]
+    asyncio_default_fixture_loop_scope = "function"
+    asyncio_mode = "auto"
+    markers = [
+        "asyncio: mark a test as an asyncio-driven test",
+        "long_running: Tests that take a long time to execute",
+    ]
+    pythonpath = "."
+
+[tool.ruff]
+    line-length = 88
+
+    [tool.ruff.lint]
+        ignore = ["D10", "E501", "S101", "S311"]
+        select = ["E", "F", "I", "UP", "W"]
+
+[tool.pyright]
+    include = ["."]
+    typeCheckingMode = "off"
+    venv = ".venv"
+    venvPath = "."

@@ -1,0 +1,6 @@
+{
+  "1de60575-bb6e-4c3d-9e6a-2fa699f9f197": {
+    "instance_type": "t3.large",
+    "reason": "libreoffice_calc: LibreOffice OOMs on t3.medium; needs >=8 GiB."
+  }
+}
