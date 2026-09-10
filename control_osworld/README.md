@@ -46,30 +46,113 @@ real machine per sample.
 
 ## Setup
 
-**Credentials.** Export these, or keep them in a file you source before running.
+Three things to configure: AWS (always), a proxy (for 52 tasks), and a Google
+account (for 8). Then the API key for whichever model you run.
 
-| Variable | Purpose |
+### 1. AWS
+
+Each sample boots its own EC2 desktop, so this is the part that takes real work.
+
+**a. Get credentials.** In the AWS console, *Security Credentials* -> *Create
+access key*. Keep the pair; the secret is shown once.
+
+**b. Pick a supported region.** OSWorld publishes the desktop image in
+**`us-east-1`** and **`ap-east-1`** only. Anywhere else fails with "Region ... is
+not supported" — the AMI simply is not there. `us-east-1` is the default.
+
+**c. Run from inside the same VPC.** The desktop's control port is not reachable
+from the open internet by design, so the machine you launch evaluations from
+should be an EC2 instance in the same (default) VPC. Sizing that machine, by how
+many desktops you run at once:
+
+| Parallel samples | Machine to run from |
 |---|---|
-| `AWS_REGION` | Region the sandbox VMs are launched in |
-| `AWS_SUBNET_ID`, `AWS_SECURITY_GROUP_ID` | Where in your VPC they are placed |
-| `AWS_INSTANCE_TYPE` | VM size; optional, defaults to `t3.xlarge` |
-| `CLIENT_PASSWORD` | Desktop password baked into the VM image |
-| `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` | Whichever provider the agent and monitor use |
+| under 5 | `t3.medium` |
+| under 15 | `t3.large` |
+| 15+ | `c4.8xlarge` |
 
-**Proxy.** 52 tasks reach sites that block datacentre IPs and need a residential
-proxy. Copy the template beside it and fill in your account:
+Give it at least 50 GB of disk.
+
+**d. Create a security group** for the desktops with these inbound rules. The
+`172.31.0.0/16` source is the default VPC range, i.e. "reachable from your runner
+but not the internet". Port 5910 is the exception — it is the VNC view, which you
+open from your own browser.
+
+| Port | Source | What it is |
+|---|---|---|
+| 22 | `172.31.0.0/16` | SSH |
+| 80 | `172.31.0.0/16` | HTTP |
+| 5000 | `172.31.0.0/16` | the desktop's control server — how the agent acts |
+| 8006, 8080, 8081, 9222 | `172.31.0.0/16` | OSWorld's other services |
+| 5910 | `0.0.0.0/0` | noVNC, to watch a run in a browser |
+
+**e. Note the IDs** of that security group and of the default VPC's subnet, then
+export everything:
+
+```bash
+export AWS_ACCESS_KEY_ID="..."
+export AWS_SECRET_ACCESS_KEY="..."
+export AWS_REGION="us-east-1"          # or ap-east-1
+export AWS_SUBNET_ID="subnet-..."
+export AWS_SECURITY_GROUP_ID="sg-..."
+export AWS_INSTANCE_TYPE="t3.xlarge"   # size of each desktop; optional
+export CLIENT_PASSWORD="..."           # desktop password baked into the image
+```
+
+`AWS_INSTANCE_TYPE` sizes the **desktops**, not your runner. One task needs at
+least `t3.large` (see Caveats).
+
+### 2. Residential proxy
+
+52 tasks visit sites that block datacentre IPs, so requests from EC2 are refused
+and the tasks fail. OSWorld's answer is a residential proxy, and the config format
+here is theirs.
+
+1. Create an account at [DataImpulse](https://dataimpulse.com/) and buy a **US
+   residential** package — billed by traffic, roughly $1/GB, which goes a long way
+   since only these tasks use it.
+2. Their dashboard gives you a **username and password** for the gateway. The
+   gateway itself is `gw.dataimpulse.com` on port `823`.
+3. Copy the template and fill those in:
 
 ```bash
 cp control_osworld/evaluation_examples/settings/proxy/dataimpulse.json.example \
    control_osworld/evaluation_examples/settings/proxy/dataimpulse.json
 ```
 
-Without it those tasks fail. Set `filter_out_proxy=True` on the setting to drop
-them instead.
+```json
+[
+    {
+        "host": "gw.dataimpulse.com",
+        "port": 823,
+        "username": "your_username",
+        "password": "your_password",
+        "protocol": "http",
+        "provider": "dataimpulse",
+        "type": "residential",
+        "country": "US"
+    }
+]
+```
 
-**Google Drive.** Eight tasks need a live Google account, configured the same way
-from `evaluation_examples/settings/google/settings.json.template`. None of them
-has a side task, so they matter only if you run the full task list.
+It is a list because OSWorld treats it as a pool: add more entries and it rotates
+between them, benching one for five minutes after three failures. Another
+provider works too if it speaks HTTP or SOCKS5 — only `host`, `port`, `username`,
+`password` and `protocol` are read.
+
+To skip these tasks instead, set `filter_out_proxy=True` on the setting.
+
+### 3. Google account
+
+Eight tasks sign in to Google Drive. Fill in
+`evaluation_examples/settings/google/settings.json` from the `.template` beside
+it. None of the eight has a side task, so this only matters if you run the full
+task list.
+
+### 4. Model API key
+
+`ANTHROPIC_API_KEY` or `OPENAI_API_KEY`, for whichever provider the agent and the
+monitor use.
 
 ## What a run does
 
@@ -292,11 +375,3 @@ is both capable and independently malicious.
   listed in `evaluation_examples/heavy_tasks.json`, and the runners in
   [`scripts/`](https://github.com/mariasrap/control-osworld/tree/main/scripts) keep it out of a normal run.
 
-## Common issues
-
-| Symptom | Cause |
-|---|---|
-| `signal only works in main thread` | The OSWorld signal-handler patch above is missing |
-| Connection refused on port 5000 | The server is still starting; `sample_init` normally waits for it |
-| 500 from `/execute` | The command timed out at 120 s, or failed. For GUI apps use `launch()` |
-| 404 from `/run_bash_script` | Not on this AMI; use `/execute` with `shell=True` |
