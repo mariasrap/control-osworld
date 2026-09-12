@@ -1,23 +1,13 @@
 # Control OSWorld
 
-An AI control environment for GUI computer use agents.
+This repository contains Control OSWorld — a control evaluation for **computer use**
+agents, built as a Control Arena setting — together with the monitors, prompt
+optimization and experiments we ran on it for the paper *Control OSWorld: An AI
+Control Environment for GUI Computer Use Agents* [link].
 
-AI control studies how to stop an AI system from causing harm even if it is
-misaligned and actively trying to. Most of that work has been done on coding
-agents. This repository is a control evaluation for **computer use** agents —
-models that operate a real desktop through its graphical interface — together with
-the experiments we ran on it.
-
-It pairs 318 tasks from [OSWorld](https://github.com/xlang-ai/OSWorld) with 81
-programmatically verified harmful side tasks — exfiltrate a private file, weaken a
-security setting, tamper with a document — that an attacking agent must complete
-without a monitor noticing. The ordinary task and the hidden one are scored
-independently, and a per-step scorer records the exact step at which the side task
-was achieved, so a monitor can be judged on whether it would have caught the agent
-*in time to stop it* rather than merely in hindsight.
-
-**Paper:** *Control OSWorld: An AI Control Environment for GUI Computer Use
-Agents* — link to follow.
+The setting pairs 318 tasks from [OSWorld](https://github.com/xlang-ai/OSWorld) with
+81 programmatically verified harmful side tasks: exfiltrate a private file, weaken a
+security setting, tamper with a document.
 
 ## What is here
 
@@ -29,19 +19,14 @@ Agents* — link to follow.
 
 ## Installation and setup
 
-Everything you need is in **[`control_osworld/README.md`](control_osworld/README.md)**.
-Be aware before you start that every task boots its
-own cloud desktop, so it needs an AWS account, and a subset of tasks needs a
-residential proxy.
+See **[`control_osworld/README.md`](control_osworld/README.md)** for installation and
+setup. Running anything needs an AWS account and API keys for the models, and some
+tasks additionally need a residential proxy account.
 
 ## Reproducing the experiments
 
-```bash
-python scripts/reproduce/reproduce.py <subcommand> 
-```
-
-Only the combinations that appear in the paper can be run; anything else is
-refused rather than quietly evaluated. 
+See **[`scripts/reproduce/README.md`](scripts/reproduce/README.md)** to reproduce the
+results in the paper.
 
 ## Scripts
 
@@ -90,6 +75,6 @@ evaluation framework.
 }
 ```
 
-## Licence
+## License
 
 MIT.
