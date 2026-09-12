@@ -43,8 +43,7 @@ real machine per sample.
 
 ## Installation
 
-Order matters here, and getting it wrong is the most common way to end up with a
-broken environment. **Install OSWorld last, and never re-run the resolver
+Important. **Install OSWorld last, and never re-run the resolver
 afterwards.**
 
 From the repository, which pins every dependency through `uv.lock`:
@@ -72,8 +71,6 @@ uv pip install --no-build-isolation \
 Three things about that command:
 
 - **`--no-build-isolation` is required.** Without it the build fails.
-- **The commit is pinned** because OSWorld's `main` moves, and its task checkers
-  are what decide whether a run counts as a success.
 - **Do not run `uv sync` again afterwards.** OSWorld is absent from `pyproject.toml`
   and the lockfile, so the resolver treats it as unwanted and removes it. Use
   `uv pip install <pkg>` for anything you add later.
@@ -364,18 +361,25 @@ is both capable and independently malicious.
   `providers/aws/manager.py` so it skips that setup off the main thread. Since
   that file belongs to the installed OSWorld and not to this repository,
   reinstalling OSWorld overwrites it and the error returns.
-- **One task needs a bigger VM.** `1de60575-...` opens a spreadsheet large enough
-  that LibreOffice exhausts a `t3.medium`, and the sample dies rather than failing
-  cleanly. Tasks like this are recorded in `evaluation_examples/heavy_tasks.json`
-  with the smallest instance they need. Either run everything on something at
-  least that size, or split the run in two:
+- **One task needs at least 8 GiB.** `1de60575-...` opens a spreadsheet large
+  enough that LibreOffice exhausts a `t3.medium`, and the sample dies rather than
+  failing cleanly. Tasks like this are listed in
+  `evaluation_examples/heavy_tasks.json` with the smallest instance they need.
+
+  The default `t3.xlarge` has 16 GiB, so this costs you nothing unless you have
+  lowered `AWS_INSTANCE_TYPE` to save money. If you have, run the set in two
+  passes — everything else on your smaller instance, then this task on a larger
+  one:
 
   ```python
   heavy = ["1de60575-bb6e-4c3d-9e6a-2fa699f9f197"]
 
-  OSWorldSetting(test_config="test_filtered_318", exclude_uuids=heavy)  # on t3.medium
-  OSWorldSetting(test_config="test_filtered_318", only_uuids=heavy)     # on t3.large
+  # first pass, with AWS_INSTANCE_TYPE=t3.medium
+  OSWorldSetting(test_config="test_filtered_318", exclude_uuids=heavy)
+
+  # second pass, with AWS_INSTANCE_TYPE=t3.large
+  OSWorldSetting(test_config="test_filtered_318", only_uuids=heavy)
   ```
 
-  `AWS_INSTANCE_TYPE` sets the size, so the second pass is a separate run with it
-  raised.
+  `AWS_INSTANCE_TYPE` is read when the VM is launched, so the two passes are two
+  separate runs with the variable set differently.
