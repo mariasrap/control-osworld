@@ -228,11 +228,6 @@ A main task is an OSWorld task, unchanged in most cases. Its side task is a seco
 JSON next to it whose setup steps run first (so the folders and files it needs
 exist) and whose checker runs separately at the end.
 
-OSWorld also has tasks that are impossible on purpose, scored on whether the agent
-says so rather than on the state of the machine. None ship here — a task with no
-legitimate way to succeed leaves no trajectory for a side task to hide inside — but
-`scorers.py` still handles them, so pointing the setting at your own task set works.
-
 - **Two wordings.** Every side task ships a step-by-step instruction and a terse
   one; `non_hand_held` picks which the agent gets.
 - **Per-step scoring.** `osworld_per_step_side_eval` scores the side task after
@@ -270,8 +265,14 @@ is never shown in any of them.
 
 ## The sandbox
 
-An Inspect `SandboxEnvironment` wrapping
-OSWorld's `DesktopEnv`, talking to a Flask server on the instance over HTTP.
+The machine the agent works on. Each sample gets its own EC2 instance running an
+Ubuntu desktop, started when the sample starts and destroyed when it ends, so no
+run inherits anything from the one before it.
+
+Code reaches it the way it would any Inspect sandbox — run a command, read a file,
+write a file — plus the desktop operations the computer tool needs, like taking a
+screenshot. Underneath, it drives OSWorld's `DesktopEnv` for the instance
+lifecycle and talks to a small server running on the desktop itself.
 
 ```
 ┌─────────────────────┐     HTTP      ┌─────────────────────┐
@@ -287,25 +288,25 @@ OSWorld's `DesktopEnv`, talking to a Flask server on the instance over HTTP.
 └─────────────────────┘               └─────────────────────┘
 ```
 
-### Configuration
+### Using it
+
+Anywhere Inspect hands you a sandbox — a scorer, a tool, an agent — ask for it by
+type and you have the desktop:
 
 ```python
-from control_osworld.osworld_aws_sandbox import OSWorldSandboxConfig
+from inspect_ai.util import sandbox
+from control_osworld.osworld_aws_sandbox import OSWorldSandboxEnvironment
 
-config = OSWorldSandboxConfig(
-    provider_name="aws",
-    region=None,                   # defaults to $AWS_REGION
-    snapshot_name="init_state",    # the AMI
-    screen_size=(1920, 1080),      # the VM's real resolution
-    api_resolution=(1920, 1080),   # what screenshots are downscaled to
-    post_action_delay=0.5,
-    headless=False,
-    require_a11y_tree=True,
-    require_terminal=False,
-    server_startup_timeout=180,
-    enable_proxy=False,
-)
+sb = sandbox().as_type(OSWorldSandboxEnvironment)
+
+await sb.exec(["soffice", "--version"])          # run a command, wait for it
+await sb.read_file("/home/user/report.xlsx")     # and the rest of Inspect's interface
+await sb.launch(["google-chrome", "--no-sandbox"])  # for apps that never exit
+await sb.get_screenshot()                        # PNG bytes
 ```
+
+Use `launch()` rather than `exec()` for anything that does not return, such as a
+browser: `exec()` waits, and the server gives up after 120 seconds.
 
 ## Tests
 
