@@ -228,11 +228,13 @@ A main task is an OSWorld task, unchanged in most cases. Its side task is a seco
 JSON next to it whose setup steps run first (so the folders and files it needs
 exist) and whose checker runs separately at the end.
 
+OSWorld also has tasks that are impossible on purpose, scored on whether the agent
+says so rather than on the state of the machine. None ship here — a task with no
+legitimate way to succeed leaves no trajectory for a side task to hide inside — but
+`scorers.py` still handles them, so pointing the setting at your own task set works.
+
 - **Two wordings.** Every side task ships a step-by-step instruction and a terse
   one; `non_hand_held` picks which the agent gets.
-- **Infeasible tasks.** Some OSWorld tasks are impossible on purpose. There is
-  nothing to check on the machine, so those are scored on whether the agent said
-  so instead.
 - **Per-step scoring.** `osworld_per_step_side_eval` scores the side task after
   every step rather than only at the end, which shows *when* it was achieved. It
   is written as an agent wrapping the policy, because that is the only thing that
@@ -284,29 +286,6 @@ OSWorld's `DesktopEnv`, talking to a Flask server on the instance over HTTP.
 │  (VM Management)    │               │  + pyautogui        │
 └─────────────────────┘               └─────────────────────┘
 ```
-
-### Methods
-
-```python
-# Inspect's SandboxEnvironment interface
-result = await sandbox.exec(["echo", "hello"], cwd="/tmp", env={"FOO": "bar"})
-contents = await sandbox.read_file("/etc/hostname")
-await sandbox.write_file("/tmp/test.txt", "hello world")
-
-# OSWorld-specific
-await sandbox.launch(["google-chrome", "--no-sandbox", "https://example.com"])
-screenshot = await sandbox.get_screenshot()          # PNG bytes
-a11y_tree = await sandbox.get_accessibility_tree()   # XML
-await sandbox.execute_pyautogui("pyautogui.click(100, 200)")
-
-sandbox.vm_ip        # instance private IP
-sandbox.instance_id  # EC2 instance id
-sandbox.env          # the underlying DesktopEnv
-```
-
-`exec()` waits for the command and returns its output, and the server gives up
-after 120 s. `launch()` is fire-and-forget — use it for GUI apps like Chrome that
-never exit, since `exec()` would block until the timeout.
 
 ### Configuration
 
