@@ -333,8 +333,9 @@ is both capable and independently malicious.
 
 ## Important notes
 
-- **One fix lives inside OSWorld, not here.** To clean up after itself, OSWorld
-  installs handlers that Python only permits on a program's main thread. We run
+- **One fix lives inside OSWorld, not here.** To tear its VMs down when a task
+  finishes, OSWorld installs handlers that Python only permits on a program's main
+  thread. We run
   samples in parallel on other threads, so it fails with `signal only works in
   main thread` before a run starts. The fix is a check we add to OSWorld's own
   `providers/aws/manager.py` so it skips that setup off the main thread. Since
@@ -346,9 +347,8 @@ is both capable and independently malicious.
   `evaluation_examples/heavy_tasks.json` with the smallest instance they need.
 
   The default `t3.xlarge` has 16 GiB, so this costs you nothing unless you have
-  lowered `AWS_INSTANCE_TYPE` to save money. If you have, run the set in two
-  passes — everything else on your smaller instance, then this task on a larger
-  one:
+  lowered `AWS_INSTANCE_TYPE`. If you have, run the set in two passes — everything
+  else on your smaller instance, then this task on a larger one:
 
   ```python
   heavy = ["1de60575-bb6e-4c3d-9e6a-2fa699f9f197"]

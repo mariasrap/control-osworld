@@ -1,9 +1,9 @@
 # Control OSWorld
 
 This repository contains Control OSWorld — a control evaluation for **computer use**
-agents, built as a Control Arena setting — together with the monitors, prompt
-optimization and experiments we ran on it for the paper *Control OSWorld: An AI
-Control Environment for GUI Computer Use Agents* [link].
+agents, built as a Control Arena setting — together with the algorithms and
+experiments we ran on it for the paper *Control OSWorld: An AI Control Environment
+for GUI Computer Use Agents* [link].
 
 The setting pairs 318 tasks from [OSWorld](https://github.com/xlang-ai/OSWorld) with
 81 programmatically verified harmful side tasks: exfiltrate a private file, weaken a
@@ -36,8 +36,7 @@ examples below are the shortest useful form of each.
 ### Running an evaluation
 
 **[`run_osworld.py`](scripts/run_osworld.py)** runs an evaluation and writes an
-inspect `.eval` log. You pick the model and whether the agent is honest or
-attacking; the remaining flags choose the variation — which attack prompt, whether
+inspect `.eval` log. You pick the model and the mode, honest or attack; the remaining flags choose the variation — which attack prompt, whether
 reminders are injected, whether the side task is scored at every step, and so on.
 
 ```bash

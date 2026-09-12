@@ -69,8 +69,8 @@ A trajectory whose log already exists is skipped. Use `--log-dir` to work somewh
 ## Setup
 
 API keys, AWS credentials, and proxy config are covered in the
-[root README](../../README.md#setup) — set those up first, and export them into
-the shell you run from (e.g. `source ~/.env_keys`).
+[setting README](../../control_osworld/README.md#setup) — set those up first, and
+export them into the shell you run from (e.g. `source ~/.env_keys`).
 
 ## Experiment-wide settings
 
