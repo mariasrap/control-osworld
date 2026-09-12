@@ -290,8 +290,7 @@ lifecycle and talks to a small server running on the desktop itself.
 
 ### Using it
 
-Anywhere Inspect hands you a sandbox — a scorer, a tool, an agent — ask for it by
-type and you have the desktop:
+The sandbox can also be used outside the Control OSWorld setting:
 
 ```python
 from inspect_ai.util import sandbox
