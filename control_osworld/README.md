@@ -331,41 +331,6 @@ config = OSWorldSandboxConfig(
 )
 ```
 
-### Server endpoints
-
-What the Flask server on the instance exposes, and how each expects its data.
-
-| Endpoint | Method | Data | Returns |
-|---|---|---|---|
-| `/platform` | GET | – | OS platform, e.g. "Linux" |
-| `/screenshot` | GET | – | PNG screenshot, cursor included |
-| `/accessibility` | GET | – | accessibility tree as XML |
-| `/terminal` | GET | – | terminal output, if one is open |
-| `/cursor_position` | GET | – | `[x, y]` |
-| `/screen_size` | POST | – | `{width, height}` |
-| `/desktop_path` | POST | – | desktop directory path |
-| `/wallpaper` | POST | – | wallpaper image |
-| `/execute` | POST | JSON `{command, shell}` | `{status, output, error, returncode}` |
-| `/setup/execute` | POST | JSON `{command, shell}` | as `/execute` |
-| `/setup/launch` | POST | JSON `{command, shell}` | fire-and-forget launch |
-| `/setup/upload` | POST | form `file_path`, `file_data` | upload a file |
-| `/file` | POST | form `file_path` | download a file |
-| `/list_directory` | POST | JSON `{path}` | directory contents |
-
-Note the inconsistency: reads and uploads take **form data**, everything else
-takes JSON. `/run_bash_script` and `/run_python` return 404 on this AMI — use
-`/execute` with `shell=True`.
-
-### Things that will bite you
-
-- **The instance is "running" before the server is.** The sandbox polls
-  `/platform` until it answers, up to `server_startup_timeout`.
-- **Signal handlers only work on the main thread.** OSWorld's AWS provider
-  registers them unconditionally, which throws when the sandbox runs off-thread.
-  We patch its `providers/aws/manager.py` to check it is on the main thread first.
-- **`exec()` has a 120 s server-side limit.** Anything longer, or anything that
-  never exits, needs `launch()`.
-
 ## Tests
 
 `tests/test_osworld_sandbox.py` covers the sandbox against a real instance: that
@@ -391,17 +356,26 @@ reuse an instance after a run. The sandboxing is not sufficient for an agent tha
 is both capable and independently malicious.
 
 ## Important notes
-- **One patch lives outside this package.** OSWorld's AWS provider registers signal
-  handlers unconditionally, which throws when the sandbox runs off the main
-  thread, so we patch its `providers/aws/manager.py` in place. Reinstalling
-  OSWorld reverts it.
-- **The task set is smaller than OSWorld's.** 318 of OSWorld's 369 tasks are here.
-  The 51 left out either needed a live Google account, were meant to be answered
-  "impossible", or could not be done through the GUI — none of which leaves a
-  trajectory a side task could hide inside.
-- **44 tasks need a residential proxy** and fail without one; `filter_out_proxy`
-  drops them instead.
-- **One task needs a bigger VM.** It exhausts the default instance's memory; it is
-  listed in `evaluation_examples/heavy_tasks.json`, and the runners in
-  [`scripts/`](https://github.com/mariasrap/control-osworld/tree/main/scripts) keep it out of a normal run.
 
+- **One fix lives inside OSWorld, not here.** To clean up after itself, OSWorld
+  installs handlers that Python only permits on a program's main thread. We run
+  samples in parallel on other threads, so it fails with `signal only works in
+  main thread` before a run starts. The fix is a check we add to OSWorld's own
+  `providers/aws/manager.py` so it skips that setup off the main thread. Since
+  that file belongs to the installed OSWorld and not to this repository,
+  reinstalling OSWorld overwrites it and the error returns.
+- **One task needs a bigger VM.** `1de60575-...` opens a spreadsheet large enough
+  that LibreOffice exhausts a `t3.medium`, and the sample dies rather than failing
+  cleanly. Tasks like this are recorded in `evaluation_examples/heavy_tasks.json`
+  with the smallest instance they need. Either run everything on something at
+  least that size, or split the run in two:
+
+  ```python
+  heavy = ["1de60575-bb6e-4c3d-9e6a-2fa699f9f197"]
+
+  OSWorldSetting(test_config="test_filtered_318", exclude_uuids=heavy)  # on t3.medium
+  OSWorldSetting(test_config="test_filtered_318", only_uuids=heavy)     # on t3.large
+  ```
+
+  `AWS_INSTANCE_TYPE` sets the size, so the second pass is a separate run with it
+  raised.
