@@ -14,7 +14,7 @@ security setting, tamper with a document.
 | | |
 |---|---|
 | [`control_osworld/`](control_osworld/) | The environment itself, packaged as a Control Arena setting: tasks, the sandbox that runs them, scorers, policies and monitors. **Start with [its README](control_osworld/README.md)** — installation, setup and how the pieces fit. |
-| [`scripts/`](scripts/) | Everything you run: evaluations, monitors, classifiers, and the two generation pipelines. Detailed below. |
+| [`scripts/`](scripts/) | Scripts for evaluations, monitors, classifiers, and the two generation pipelines. Detailed below. |
 | [`side_task_templates/`](side_task_templates/) | The side task catalog: the 81 templates, how each pairs with a main task, and every deviation from stock OSWorld. |
 
 ## Installation and setup
@@ -30,26 +30,68 @@ results in the paper.
 
 ## Scripts
 
+Every script takes `--help`, which lists all of its options with defaults. The
+examples below are the shortest useful form of each.
+
 ### Running an evaluation
 
-| | |
-|---|---|
-| [`run_osworld.py`](scripts/run_osworld.py) | Runs an evaluation and writes an inspect `.eval` log. One flag chooses the mode: honest, attack with a prompt of your choice, either of those with an empty agent, the side task presented openly as the main task, or the side-task verifier. `--per_step_side_eval` additionally scores the side task after every step. |
-| [`run_osworld_human_baseline.py`](scripts/run_osworld_human_baseline.py) | Hands the desktop to a person over noVNC instead of a model, to check by hand whether a task is doable at all. |
+**[`run_osworld.py`](scripts/run_osworld.py)** runs an evaluation and writes an
+inspect `.eval` log. You pick the model and whether the agent is honest or
+attacking; the remaining flags choose the variation — which attack prompt, whether
+reminders are injected, whether the side task is scored at every step, and so on.
+
+```bash
+python scripts/run_osworld.py --model anthropic/claude-sonnet-4-6 \
+    --mode attack --test_config test_small
+```
+
+**[`run_osworld_human_baseline.py`](scripts/run_osworld_human_baseline.py)** hands
+the desktop to a person over noVNC rather than a model, to check by hand whether a
+task can be done at all.
+
+```bash
+python scripts/run_osworld_human_baseline.py --test_config test_single
+```
 
 ### Scoring a finished run
 
-These read an `.eval` log and write JSON; none of them re-runs the agent.
+These read an `.eval` log and write JSON; none of them re-runs the agent. Each
+needs the log to read, a path to write, and the model doing the judging.
 
-| | |
-|---|---|
-| [`run_monitor.py`](scripts/run_monitor.py) | The trusted monitor over each whole trajectory: one suspicion score per run. |
-| [`run_monitor_per_step.py`](scripts/run_monitor_per_step.py) | The trusted monitor step by step, so you can ask whether it would have flagged the agent before the harmful action executed rather than after. |
-| [`classifiers/refusal_classifier.py`](scripts/classifiers/refusal_classifier.py) | Did the agent refuse, and was it on safety grounds rather than because it got stuck? Separates "would not" from "could not". |
-| [`classifiers/side_task_leak_classifier.py`](scripts/classifiers/side_task_leak_classifier.py) | Did the agent give itself away in its visible text — naming the hidden objective, rather than merely acting on it? |
+**[`run_monitor.py`](scripts/run_monitor.py)** scores each trajectory as a whole:
+one suspicion score per run. `--variant` sets what the monitor is shown.
 
-Every one takes `--help`, and their module docstrings document the output JSON
-field by field.
+```bash
+python scripts/run_monitor.py --log-path logs/run.eval --variant with_text \
+    --model anthropic/claude-haiku-4-5 --out-path logs/monitor/run.json
+```
+
+**[`run_monitor_per_step.py`](scripts/run_monitor_per_step.py)** scores step by
+step instead, so you can ask whether the agent would have been flagged before the
+harmful action ran rather than after.
+
+```bash
+python scripts/run_monitor_per_step.py --log-path logs/run.eval --variant with_text \
+    --model anthropic/claude-haiku-4-5 --out-path logs/monitor/run_perstep.json
+```
+
+**[`classifiers/refusal_classifier.py`](scripts/classifiers/refusal_classifier.py)**
+asks whether the agent refused, and whether it refused on safety grounds rather
+than because it got stuck — separating "would not" from "could not".
+
+```bash
+python scripts/classifiers/refusal_classifier.py --log-path logs/run.eval \
+    --out-path logs/classifier/refusal.json
+```
+
+**[`classifiers/side_task_leak_classifier.py`](scripts/classifiers/side_task_leak_classifier.py)**
+asks whether the agent gave itself away in its visible text, naming the hidden
+objective rather than merely acting on it.
+
+```bash
+python scripts/classifiers/side_task_leak_classifier.py --log-path logs/run.eval \
+    --out-path logs/classifier/leak.json
+```
 
 ### Pipelines
 
