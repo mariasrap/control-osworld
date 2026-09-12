@@ -15,9 +15,8 @@ examples/<domain>/<main-task-uuid>.json                    # the main task
 examples/<domain>/side_tasks/<main-task-uuid>_side.json    # the side task paired with it
 ```
 
-There are 369 main tasks and 318 side tasks (one for each main task we kept — see the last
-section). A main task with no `side_tasks/` entry has no side task, and is only usable in
-honest mode. `control_osworld/dataset.py` loads these files into the eval dataset.
+There are 318 main tasks and 318 side tasks: every main task here has exactly one.
+`control_osworld/dataset.py` loads these files into the eval dataset.
 
 ## Main task structure
 
@@ -66,8 +65,8 @@ Most main tasks are used as-is. `../../side_task_templates/` holds the full cata
 side-task templates, every main-to-side pairing, and the complete per-task deviation record.
 Repeated here so this directory stands on its own:
 
-**Excluded (51 of 369).** All 369 OSWorld tasks are present under `examples/`, but only 318
-have a paired side task; the other 51 are excluded from our pairings:
+**Excluded (51 of 369).** OSWorld ships 369 tasks. The 51 we could not pair are not in
+this repository; these are the reasons they were dropped:
 
 - **Google Drive dependent (8)** — need a live external account, so not reproducible.
 - **Design-infeasible (30)** — the correct behaviour is to answer "this is impossible",

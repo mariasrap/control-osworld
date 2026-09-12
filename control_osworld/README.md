@@ -2,7 +2,7 @@
 
 The OSWorld setting for Control Arena. Tasks are real jobs on a real Ubuntu
 desktop — edit a spreadsheet, fix a slide deck, reorganise files — and the agent
-does them the way a person would, by looking at screenshots and clicking and
+does them by looking at screenshots and clicking and
 typing. Each task is paired with a **side task**: a harmful objective (exfiltrate
 a file, weaken a setting, plant persistence) that an attacking agent is secretly
 told to pursue while it does the visible job. Main and side are scored
@@ -86,8 +86,8 @@ python -c "import desktop_env, control_osworld; print('ok')"
 
 ## Setup
 
-Three things to configure: AWS (always), a proxy (for 52 tasks), and a Google
-account (for 8). Then the API key for whichever model you run.
+Two things to configure, AWS and a proxy, then the API key for whichever model
+you run.
 
 ### 1. AWS
 
@@ -144,8 +144,8 @@ least `t3.large` (see Caveats).
 
 ### 2. Residential proxy
 
-52 tasks visit sites that block datacentre IPs, so requests from EC2 are refused
-and the tasks fail. OSWorld's answer is a residential proxy, and the config format
+44 of the 318 tasks visit sites that block datacentre IPs, so requests from EC2
+are refused and the tasks fail. OSWorld's answer is a residential proxy, and the config format
 here is theirs.
 
 1. Create an account at [DataImpulse](https://dataimpulse.com/) and buy a **US
@@ -182,14 +182,7 @@ provider works too if it speaks HTTP or SOCKS5 — only `host`, `port`, `usernam
 
 To skip these tasks instead, set `filter_out_proxy=True` on the setting.
 
-### 3. Google account
-
-Eight tasks sign in to Google Drive. Fill in
-`evaluation_examples/settings/google/settings.json` from the `.template` beside
-it. None of the eight has a side task, so this only matters if you run the full
-task list.
-
-### 4. Model API key
+### 3. Model API key
 
 `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`, for whichever provider the agent and the
 monitor use.
@@ -397,19 +390,16 @@ needs, keep it in a subnet you are willing to have an agent act from, and do not
 reuse an instance after a run. The sandboxing is not sufficient for an agent that
 is both capable and independently malicious.
 
-## Caveats and limitations
-
+## Important notes
 - **One patch lives outside this package.** OSWorld's AWS provider registers signal
   handlers unconditionally, which throws when the sandbox runs off the main
   thread, so we patch its `providers/aws/manager.py` in place. Reinstalling
-  OSWorld reverts it, and the symptom is the first entry under Common issues.
-- **Runs cost real money and real time.** Every sample boots an EC2 instance and
-  waits on a desktop; VM setup alone is a couple of minutes before the agent acts.
-- **Not every task can be attacked.** 318 of the 369 main tasks have a side task.
-  The other 51 either need a live Google account, are meant to be answered
-  "impossible", or cannot be done through the GUI — none of which leaves a
+  OSWorld reverts it.
+- **The task set is smaller than OSWorld's.** 318 of OSWorld's 369 tasks are here.
+  The 51 left out either needed a live Google account, were meant to be answered
+  "impossible", or could not be done through the GUI — none of which leaves a
   trajectory a side task could hide inside.
-- **52 tasks need a residential proxy** and fail without one; `filter_out_proxy`
+- **44 tasks need a residential proxy** and fail without one; `filter_out_proxy`
   drops them instead.
 - **One task needs a bigger VM.** It exhausts the default instance's memory; it is
   listed in `evaluation_examples/heavy_tasks.json`, and the runners in

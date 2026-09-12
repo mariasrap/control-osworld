@@ -25,25 +25,17 @@
   "multi_apps": [
     "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a",
     "5990457f-2adb-467b-a4af-5c857c92d762",
-    "2b9493d7-49b8-493a-a71b-56cd1f4d6908",
-    "46407397-a7d5-4c6b-92c6-dbe038b1457b",
-    "4e9f0faf-2ecc-4ae8-a804-28c9a75d1ddc",
-    "510f64c8-9bcc-4be1-8d30-638705850618",
-    "897e3b53-5d4d-444b-85cb-2cdc8a97d903",
     "c867c42d-a52d-4a24-8ae3-f75d256b5618",
     "74d5859f-ed66-4d3e-aa0e-93d7a592ce41",
     "b5062e3e-641c-4e3a-907b-ac864d2e7652",
-    "48d05431-6cd5-4e76-82eb-12b60d823f7d",
     "eb303e01-261e-4972-8c07-c9b4e7a4922a",
     "d1acdb87-bb67-4f30-84aa-990e56a09c92",
     "deec51c9-3b1e-4b9e-993c-4776f20e8bb2",
     "8e116af7-7db7-4e35-a68b-b0939c066c78",
-    "716a6079-22da-47f1-ba73-c9d58f986a38",
-    "2373b66a-092d-44cb-bfd7-82e86e7a3b4d"
+    "716a6079-22da-47f1-ba73-c9d58f986a38"
   ],
   "os": [
-    "5ea617a3-0e86-4ba6-aab2-dac9aa2e8d57",
-    "5812b315-e7bd-4265-b51f-863c02174c28"
+    "5ea617a3-0e86-4ba6-aab2-dac9aa2e8d57"
   ],
   "thunderbird": [
     "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397",
